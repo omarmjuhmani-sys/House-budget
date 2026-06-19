@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم المالية</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<div class="container">
+
+<h1>📊 لوحة التحكم</h1>
+
+<div class="card">
+<h2>الراتب الشهري</h2>
+<h1>1300 د.أ</h1>
+</div>
+
+<div class="card">
+<h2>القرض</h2>
+<p>المتبقي: <strong>2192 د.أ</strong></p>
+<p>الأشهر المتبقية: <strong>13</strong></p>
+<p>القسط الشهري: <strong>179 د.أ</strong></p>
+</div>
+
+<div class="card">
+<h2>صندوق الطوارئ</h2>
+<div class="progress">
+<div class="progress-fill" style="width:10%"></div>
+</div>
+<p>0 / 5000 د.أ</p>
+</div>
+
+<div class="card">
+<h2>الميزانية الشهرية</h2>
+
+<p>سوبرماركت</p>
+<div class="progress">
+<div class="progress-fill green" id="marketBar"></div>
+</div>
+
+<p>وقود</p>
+<div class="progress">
+<div class="progress-fill orange" id="fuelBar"></div>
+</div>
+
+<p>كهرباء</p>
+<div class="progress">
+<div class="progress-fill red" id="electricBar"></div>
+</div>
+
+</div>
+
+<a href="index.html">
+<button>📸 العودة للفواتير</button>
+</a>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
