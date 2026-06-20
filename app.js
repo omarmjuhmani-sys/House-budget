@@ -3,15 +3,16 @@ async function scanReceipt() {
 const file = document.getElementById('receiptImage').files[0];
 
 if (!file) {
-alert("اختر صورة");
-return;
+    alert("اختر صورة");
+    return;
 }
 
-document.getElementById("output").value = "جاري تحليل الفاتورة...";
+document.getElementById("output").value =
+"جاري تحليل الفاتورة...";
 
 const result = await Tesseract.recognize(
-file,
-'ara+eng'
+    file,
+    'ara+eng'
 );
 
 const text = result.data.text;
@@ -24,59 +25,76 @@ categorize(text);
 
 function categorize(text) {
 
-const lines = text.split("\n");
+let category = "أخرى";
+let item = "فاتورة";
+let amount = 0;
 
-let supermarket = 0;
-let fuel = 0;
+const lower = text.toLowerCase();
 
-lines.forEach(line => {
+// استخراج أكبر مبلغ من الفاتورة
+const numbers = text.match(/\d+(\.\d+)?/g);
 
-const match = line.match(/\d+(\.\d+)?/);
+if (numbers) {
 
-if (!match) return;
+    const values = numbers
+    .map(n => parseFloat(n))
+    .filter(n => !isNaN(n));
 
-const price = parseFloat(match[0]);
+    amount = Math.max(...values);
 
-const lower = line.toLowerCase();
-
-if (
-    lower.includes("milk") ||
-    lower.includes("bread") ||
-    lower.includes("cheese") ||
-    lower.includes("rice") ||
-    lower.includes("حليب") ||
-    lower.includes("خبز") ||
-    lower.includes("جبنة") ||
-    lower.includes("رز")
-) {
-    supermarket += price;
 }
 
+// تصنيف ذكي
+
 if (
+    lower.includes("بوابة الشعب") ||
+    lower.includes("supermarket") ||
+    lower.includes("market") ||
+    lower.includes("تخفيضات")
+) {
+    category = "سوبرماركت";
+}
+
+else if (
     lower.includes("fuel") ||
     lower.includes("diesel") ||
     lower.includes("gasoline") ||
     lower.includes("بنزين") ||
     lower.includes("ديزل")
 ) {
-    fuel += price;
+    category = "وقود";
 }
 
-});
+else if (
+    lower.includes("electric") ||
+    lower.includes("كهرباء")
+) {
+    category = "كهرباء";
+}
+
+else if (
+    lower.includes("water") ||
+    lower.includes("مياه")
+) {
+    category = "ماء";
+}
 
 document.getElementById("market").innerText =
-supermarket.toFixed(2);
+(category === "سوبرماركت")
+? amount.toFixed(2)
+: "0.00";
 
 document.getElementById("fuel").innerText =
-fuel.toFixed(2);
+(category === "وقود")
+? amount.toFixed(2)
+: "0.00";
 
-if (supermarket > 0) {
-saveExpense("سوبرماركت", "فاتورة", supermarket);
-}
-
-if (fuel > 0) {
-saveExpense("وقود", "فاتورة", fuel);
-}
+// إرسال مباشر للشيت
+saveExpense(
+    category,
+    item,
+    amount
+);
 
 }
 
@@ -84,7 +102,7 @@ async function saveExpense(category, item, amount) {
 
 try {
 
-await fetch(
+const response = await fetch(
 "https://script.google.com/macros/s/AKfycby_cco8H2isAJgpjxhx_3WqJxeGqJRTMgndHfr64KRBMqN7PfI1zurdmAz40iGqOn_i/exec",
 {
 method: "POST",
@@ -99,11 +117,24 @@ amount: amount
 }
 );
 
-console.log("Saved");
+const result = await response.text();
 
-} catch (error) {
+console.log(result);
+
+alert(
+"تم الحفظ بالشيت\n" +
+"التصنيف: " + category +
+"\nالمبلغ: " + amount
+);
+
+}
+catch(error) {
 
 console.error(error);
+
+alert(
+"فشل الربط مع Google Sheet"
+);
 
 }
 
