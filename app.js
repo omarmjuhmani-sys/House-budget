@@ -85,7 +85,7 @@ async function saveExpense(category, item, amount) {
 try {
 
 await fetch(
-"https://script.google.com/macros/s/AKfycbw7GUExSRKHhskkmiBIMTJnV9QXJHp0asuPiP1bzI4C1uXQqq8TlYlWZdyf3-gZHhnF/exec",
+"https://script.google.com/macros/s/AKfycby_cco8H2isAJgpjxhx_3WqJxeGqJRTMgndHfr64KRBMqN7PfI1zurdmAz40iGqOn_i/exec",
 {
 method: "POST",
 headers: {
