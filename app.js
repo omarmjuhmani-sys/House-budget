@@ -72,3 +72,31 @@ document.getElementById("fuel")
 .innerText = fuel.toFixed(2);
 
 }
+async function saveExpense(category, item, amount){
+
+try{
+
+await fetch(
+"https://script.google.com/macros/s/AKfycbyLNxqCIOa4mLZeXT0yoTkUS-qhvODhmcGujGUCEcdxIuVHax8LSraM78ymMWX8-YM/exec",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+category:category,
+item:item,
+amount:amount
+})
+}
+);
+
+console.log("Saved");
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
