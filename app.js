@@ -7,7 +7,7 @@ alert("اختر صورة");
 return;
 }
 
-document.getElementById("output").value = "جاري التحليل ...";
+document.getElementById("output").value = "جاري تحليل الفاتورة...";
 
 const result = await Tesseract.recognize(
 file,
@@ -71,19 +71,11 @@ document.getElementById("fuel").innerText =
 fuel.toFixed(2);
 
 if (supermarket > 0) {
-saveExpense(
-"سوبرماركت",
-"فاتورة",
-supermarket
-);
+saveExpense("سوبرماركت", "فاتورة", supermarket);
 }
 
 if (fuel > 0) {
-saveExpense(
-"وقود",
-"فاتورة",
-fuel
-);
+saveExpense("وقود", "فاتورة", fuel);
 }
 
 }
@@ -92,28 +84,26 @@ async function saveExpense(category, item, amount) {
 
 try {
 
-const response = await fetch(
-    "https://script.google.com/macros/s/AKfycbyLNxqCIOa4mLZeXT0yoTkUS-qhvODhmcGujGUCEcdxIuVHax8LSraM78ymMWX8-YM/exec",
-    {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            category: category,
-            item: item,
-            amount: amount
-        })
-    }
+await fetch(
+"https://script.google.com/macros/s/AKfycbw7GUExSRKHhskkmiBIMTJnV9QXJHp0asuPiP1bzI4C1uXQqq8TlYlWZdyf3-gZHhnF/exec",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+category: category,
+item: item,
+amount: amount
+})
+}
 );
 
-const result = await response.text();
+console.log("Saved");
 
-console.log("Saved:", result);
+} catch (error) {
 
-} catch (err) {
-
-console.error("Save Error:", err);
+console.error(error);
 
 }
 
